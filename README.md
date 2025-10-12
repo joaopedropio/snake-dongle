@@ -23,6 +23,7 @@ Click [here](https://www.youtube.com/watch?v=xdSUZYLVVY0) to watch a demo.
 
 ## Contents
 - [Features & Behavior](#features--behavior-)
+- [Slots](#slots-)
 - [Connectivity](#connectivity-)
 - [Themes](#themes-)
 - [Firmware Installation](#firmware-installation-)
@@ -56,16 +57,53 @@ This dongle also includes three screens in its interface:
 - **Main Menu** — shows operational status:
   - Battery connection state.
   - Battery level.
-  - Active layer or selected theme (controlled via `CONFIG_SHOW_ACTIVE_LAYER` variable).
-  - Transport mode (Bluetooth or wired).
-  - Active Bluetooth profile.
+  - Two slots that you can choose which widget is most important to you.
   - Animated snake logo.
+
+## Slots [🔼](#contents)
+
+<img src="images/slots/slots.webp"/>
+
+The slots section is this middle part of the menu screen. You can define what widget you want in each of these slots. The default widgets: on the left: `connectivity`; on the right: `layer`. Checkout `CONFIG_INFO_LEFT_SLOT` and `CONFIG_INFO_RIGHT_SLOT` variables on [Configuration Options](#configuration-options-). The available widgets are the following:
+
+<table>
+    <tr>
+        <th>Example</th>
+        <th>Config Value</th>
+        <th>Note</th>
+    </tr>
+    <tr>
+        <td><img src="images/slots/connectivity.gif" alt="case" style="width:150px;"/></td>
+        <td>"connectivity"</td>
+        <td>This widget shows which transport, selected bluetooth profile and it's status. You can find a full explanation on the section bellow.</td>
+    </tr>
+    <tr>
+        <td><img src="images/slots/layer.gif" alt="case" style="width:150px;"/></td>
+        <td>"layer"</td>
+        <td>This widget shows the current layer.</td>
+    </tr>
+    <tr>
+        <td><img src="images/slots/modifiers.gif" alt="case" style="width:150px;"/></td>
+        <td>"modifiers"</td>
+        <td>This widget shows modifiers being pressed.</td>
+    </tr>
+    <tr>
+        <td><img src="images/slots/theme.gif" alt="case" style="width:150px;"/></td>
+        <td>"theme"</td>
+        <td>This widget shows current theme.</td>
+    </tr>
+    <tr>
+        <td><img src="images/slots/wpm.gif" alt="case" style="width:150px;"/></td>
+        <td>"wpm"</td>
+        <td>This widget shows the typing speed.</td>
+    </tr>
+</table>
 
 ## Connectivity [🔼](#contents)
 
-<img src="images/connectivity/connectivity.webp" alt="case" style="width:500px;"/>
+This is a detailed explanation of the connectiviy widget:
 
-The image above show all keyboard connectivity information. This part is located on main menu screen. Let's see what each section means:
+<img src="images/connectivity/connectivity.webp" alt="case" style="width:500px;"/>
 
 <table>
     <tr>
@@ -190,7 +228,7 @@ Only Theme C is customizable. If `CONFIG_USE_COMPLETE_CUSTOM_THEME=y`, all varia
 
 ## Firmware Installation [🔼](#contents)
 
-Your ZMK keyboard should be set up with a dongle as central. [This](https://github.com/joaopedropio/zmk-swoop) repo may help you in case you run into trouble. 
+Your ZMK keyboard should be set up with a dongle as central. [This](https://zmk.dev/docs/development/hardware-integration/dongle#adding-a-dongle) page has lots of information about adding a dongle. [This](https://github.com/joaopedropio/zmk-swoop) repo may help you in case you run into trouble. 
 
 Add this module to your `config/west.yml` with these new entries under `remotes` and `projects`:
 
@@ -257,7 +295,8 @@ For more information on ZMK Modules and building locally, see [the ZMK docs page
 | `CONFIG_MUTE_THRESHOLD` | Any number above `CONFIG_THEME_THRESHOLD` | 600 | Action button hold time to (un)mute. |
 | `CONFIG_DEFAULT_SCREEN` | <ul><li>"snake"</li><li>"status"</li></ul> | "snake" | The screen that is displayed right after the splash screen. |
 | `CONFIG_LOGO_WALK_INTERVAL` | Any number above 0 | 40 | Time in ms between each refresh of the snake logo animation. |
-| `CONFIG_SHOW_ACTIVE_LAYER` | y or n | y | Shows active layer on menu screen. If disabled, show the current theme instead. |
+| `CONFIG_INFO_LEFT_SLOT` | <ul><li>"layer"</li><li>"connectivity"</li><li>"theme"</li><li>"wpm"</li><li>"modifiers"</li></ul> | "connectivity" | Set the widget that will be displayed on the left slot right above left battery level. |
+| `CONFIG_INFO_RIGHT_SLOT` | <ul><li>"layer"</li><li>"connectivity"</li><li>"theme"</li><li>"wpm"</li><li>"modifiers"</li></ul> | "connectivity" | Set the widget that will be displayed on the right slot right above right battery level. |
 | `CONFIG_SPLASH_USE_SNAKE_2` | y or n | n | Use the "Snake 2" logo or just the default dongle logo which is just "snake". |
 | `CONFIG_USE_COMPLETE_CUSTOM_THEME` | y or n | n | Enable using basic theme or complete theme on custom theme slot. If `n`, the `CONFIG_THEME_[COLOR TYPE]_COLOR` variables will be used as theme. If `y`, all the variables bellow "complete theme settings" comment on the [file](#example-configuration-file-) bellow will be used as theme. |
 | `CONFIG_USE_BATTERY_FONT_3X5` | y or n | n | Use 3x5 font on battery section. The default battery font is 5x8. [](images/3x5_thumb.webp)|
@@ -274,11 +313,6 @@ For more information on ZMK Modules and building locally, see [the ZMK docs page
         <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/example/5x8.webp"><img src="images/example/5x8_thumb.webp" alt="case" style="width:200px;"/></a></td>
         <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/example/3x5.webp"><img src="images/example/3x5_thumb.webp" alt="case" style="width:200px;"/></a></td>
         <td>On battery section, you can have 3x5 or 5x8 font. The default font is 5x8. If you want to change to 3x5, set CONFIG_USE_BATTERY_FONT_3X5=y.</td>
-    </tr>
-    <tr>
-        <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/example/active_layer.webp"><img src="images/example/active_layer_thumb.webp" alt="case" style="width:200px;"/></a></td>
-        <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/example/theme.webp"><img src="images/example/theme_thumb.webp" alt="case" style="width:200px;"/></a></td>
-        <td>On theme/active layer section (rigth side of the connectivity section), you can set you want the current active layer or theme current theme (that I called 'skin' 😅). The default is to show active layer. If you want it to show current theme, set CONFIG_SHOW_ACTIVE_LAYER=n.</td>
     </tr>
     <tr>
         <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/example/default_logo.webp"><img src="images/example/default_logo_thumb.webp" alt="case" style="width:200px;"/></a></td>
@@ -333,8 +367,11 @@ CONFIG_DEFAULT_SCREEN="snake"
 # default: "snake". Options: "snake", "status"
 CONFIG_LOGO_WALK_INTERVAL=40
 # default: 40 (in milliseconds)
-CONFIG_SHOW_ACTIVE_LAYER=n
-# default: y
+CONFIG_INFO_LEFT_SLOT="connectivity"
+# default: "connectivity". Options: "layer", "connectivity", "theme", "wpm", "modifiers"
+CONFIG_INFO_RIGHT_SLOT="layer"
+# default: "layer". Options: "layer", "connectivity", "theme", "wpm", "modifiers"
+
 
 # configure theme
 CONFIG_USE_COMPLETE_CUSTOM_THEME=y
@@ -393,6 +430,12 @@ CONFIG_LOGO_BG_COLOR="#212121"
 CONFIG_FRAME_COLOR="#FEE440"
 CONFIG_FRAME_COLOR_1="#3C1642"
 CONFIG_MENU_BG_COLOR="#212121"
+CONFIG_WPM_FONT_COLOR="#A0A0A0"
+CONFIG_WPM_FONT_1_COLOR="#E0E0E0"
+CONFIG_WPM_FONT_BG_COLOR="#212121"
+CONFIG_MODIFIER_SELECTED_COLOR="#9D4EDD"
+CONFIG_MODIFIER_UNSELECTED_COLOR="#4A4E69"
+CONFIG_MODIFIER_BG_COLOR="#212121"
 ```
 
 ## Bill of Materials [🔼](#contents)
