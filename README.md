@@ -299,7 +299,8 @@ For more information on ZMK Modules and building locally, see [the ZMK docs page
 | `CONFIG_INFO_RIGHT_SLOT` | <ul><li>"layer"</li><li>"connectivity"</li><li>"theme"</li><li>"wpm"</li><li>"modifiers"</li></ul> | "connectivity" | Set the widget that will be displayed on the right slot right above right battery level. |
 | `CONFIG_SPLASH_USE_SNAKE_2` | y or n | n | Use the "Snake 2" logo or just the default dongle logo which is just "snake". |
 | `CONFIG_USE_COMPLETE_CUSTOM_THEME` | y or n | n | Enable using basic theme or complete theme on custom theme slot. If `n`, the `CONFIG_THEME_[COLOR TYPE]_COLOR` variables will be used as theme. If `y`, all the variables bellow "complete theme settings" comment on the [file](#example-configuration-file-) bellow will be used as theme. |
-| `CONFIG_USE_BATTERY_FONT_3X5` | y or n | n | Use 3x5 font on battery section. The default battery font is 5x8. [](images/3x5_thumb.webp)|
+| `CONFIG_USE_BATTERY_FONT_3X5` | y or n | n | Use 3x5 font on battery section. The default battery font is 5x8. |
+| `CONFIG_SHOW_SINGLE_BATTERY` | y or n | n | Show just the first binded peripheral battery level. Helpful in case of a single peripheral keyboard. |
 
 ## Configuration examples [🔼](#contents)
 
@@ -313,6 +314,11 @@ For more information on ZMK Modules and building locally, see [the ZMK docs page
         <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/example/5x8.webp"><img src="images/example/5x8_thumb.webp" alt="case" style="width:200px;"/></a></td>
         <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/example/3x5.webp"><img src="images/example/3x5_thumb.webp" alt="case" style="width:200px;"/></a></td>
         <td>On battery section, you can have 3x5 or 5x8 font. The default font is 5x8. If you want to change to 3x5, set CONFIG_USE_BATTERY_FONT_3X5=y.</td>
+    </tr>
+    <tr>
+        <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/example/5x8.webp"><img src="images/example/5x8_thumb.webp" alt="case" style="width:200px;"/></a></td>
+        <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/example/single_battery.webp"><img src="images/example/single_battery_thumb.webp" alt="case" style="width:200px;"/></a></td>
+        <td>On battery section, you can show just a single battery slot in case of single peripheral keyboard. The default is 2 battery level slots. If you want to change to a single slot, set CONFIG_SHOW_SINGLE_BATTERY=y.</td>
     </tr>
     <tr>
         <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/example/default_logo.webp"><img src="images/example/default_logo_thumb.webp" alt="case" style="width:200px;"/></a></td>
@@ -367,6 +373,8 @@ CONFIG_DEFAULT_SCREEN="snake"
 # default: "snake". Options: "snake", "status"
 CONFIG_LOGO_WALK_INTERVAL=40
 # default: 40 (in milliseconds)
+CONFIG_SHOW_SINGLE_BATTERY=n
+# default: n
 CONFIG_INFO_LEFT_SLOT="connectivity"
 # default: "connectivity". Options: "layer", "connectivity", "theme", "wpm", "modifiers"
 CONFIG_INFO_RIGHT_SLOT="layer"
