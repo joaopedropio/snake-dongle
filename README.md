@@ -7,7 +7,7 @@
 
 Snake Dongle is a compact, highly customizable ZMK-powered dongle that features a Snake‑game-style animation and optional sound effects.
 
-Click [here](https://www.youtube.com/watch?v=xdSUZYLVVY0) to watch a demo.
+Demo: [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?logo=YouTube&logoColor=white)](https://www.youtube.com/watch?v=xdSUZYLVVY0)
 
 # Image Gallery
 
