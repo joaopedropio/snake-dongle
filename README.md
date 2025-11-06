@@ -246,7 +246,7 @@ manifest:
       import: app/west.yml
     - name: snake-module                          # <--- and these
       remote: joaopedropio                        # <---
-      revision: master                            # <---
+      revision: directionals                      # <---
   self:
     path: config
 ```
@@ -301,6 +301,9 @@ For more information on ZMK Modules and building locally, see [the ZMK docs page
 | `CONFIG_USE_COMPLETE_CUSTOM_THEME` | y or n | n | Enable using basic theme or complete theme on custom theme slot. If `n`, the `CONFIG_THEME_[COLOR TYPE]_COLOR` variables will be used as theme. If `y`, all the variables bellow "complete theme settings" comment on the [file](#example-configuration-file-) bellow will be used as theme. |
 | `CONFIG_USE_BATTERY_FONT_3X5` | y or n | n | Use 3x5 font on battery section. The default battery font is 5x8. |
 | `CONFIG_SHOW_SINGLE_BATTERY` | y or n | n | Show just the first binded peripheral battery level. Helpful in case of a single peripheral keyboard. |
+| `IDLE_THRESHOLD` | Any number above 0 | 500 | Number of cycles with any directional input |
+| `MANUAL_CYCLE_THRESHOLD` | Any number above 0 | 16 | Number of cycles between every refresh rate of the manual snake. |
+| `MANUAL_CYCLE_PRESSED_THRESHOLD` | Any number above 0 | 8 | Number of cycles between every refresh rate of the manual snake whilst directional is pressing. |
 
 ## Configuration examples [🔼](#contents)
 
@@ -347,6 +350,12 @@ CONFIG_WPM_FAST=80
 # default: 80
 CONFIG_WPM_SUPER_FAST=90
 # default: 90
+CONFIG_IDLE_THRESHOLD=500
+# default: 500
+CONFIG_MANUAL_CYCLE_THRESHOLD=16
+# default: 16
+CONFIG_MANUAL_CYCLE_PRESSED_THRESHOLD=8
+# default: 8
 
 # configure sound
 CONFIG_USE_BUZZER=y
@@ -516,6 +525,8 @@ CONFIG_MODIFIER_BG_COLOR="#212121"
 
 ### Optional Materials [🔼](#contents)
 
+#### Sound module
+
 <table>
     <tr>
         <th>Image</th>
@@ -544,6 +555,18 @@ CONFIG_MODIFIER_BG_COLOR="#212121"
         <td>1x</td>
         <td><a href="https://pt.aliexpress.com/item/1005006157105408.html">aliexpress</a></td>
         <td>Any kind of resistor/potentiometer will do. This allows you to control buzzer volume. Not required. Without one, the volume will be always 100%.</td>
+    </tr>
+</table>
+
+#### Directional module
+
+<table>
+    <tr>
+        <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/bom/button.webp"><img src="images/bom/button_thumb.webp" alt="button" style="width:200px;"/></a></td>
+        <td>4 Pin 6x6x8 Push Button</td>
+        <td>6x</td>
+        <td><a href="https://pt.aliexpress.com/item/1005007623070623.html">aliexpress</a></td>
+        <td>todo (decide wich type of button to use with the gameboy case.</td>
     </tr>
 </table>
 
