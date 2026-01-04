@@ -228,7 +228,12 @@ Only Theme C is customizable. If `CONFIG_USE_COMPLETE_CUSTOM_THEME=y`, all varia
 
 ## Firmware Installation [🔼](#contents)
 
-Your ZMK keyboard should be set up with a dongle as central. [This](https://zmk.dev/docs/development/hardware-integration/dongle#adding-a-dongle) page has lots of information about adding a dongle. [This](https://github.com/joaopedropio/zmk-swoop) repo may help you in case you run into trouble. 
+Your ZMK keyboard should be set up with a dongle as central. [This](https://zmk.dev/docs/development/hardware-integration/dongle#adding-a-dongle) page has lots of information about adding a dongle. [This](https://github.com/joaopedropio/zmk-swoop) repo may help you in case you run into trouble.
+
+> [!CAUTION]
+> If you are getting `devicetree error: 'mipi-mode' appears in ...` error that means your zmk revision is set to `main`.
+> The main revision uses a new display protocol introduced on zephyr 4.1.
+> To use zmk `main` revision set snake-module revision to `zephyr-4.1`.
 
 Add this module to your `config/west.yml` with these new entries under `remotes` and `projects`:
 
@@ -242,7 +247,7 @@ manifest:
   projects:
     - name: zmk
       remote: zmkfirmware
-      revision: main
+      revision: v0.2
       import: app/west.yml
     - name: snake-module                          # <--- and these
       remote: joaopedropio                        # <---
