@@ -23,7 +23,8 @@ Demo: [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?logo=YouTub
 
 ## Contents
 - [Features & Behavior](#features--behavior-)
-- [Slots](#slots-)
+- [Main Menu Configuration](#main-menu-configuration-)
+- [Widgets](#widgets-)
 - [Connectivity](#connectivity-)
 - [Themes](#themes-)
 - [Firmware Installation](#firmware-installation-)
@@ -57,14 +58,46 @@ This dongle also includes three screens in its interface:
 - **Main Menu** — shows operational status:
   - Battery connection state.
   - Battery level.
-  - Two slots that you can choose which widget is most important to you.
+  - 2/4/6 slots that you can choose which widget is most important to you.
   - Animated snake logo.
 
-## Slots [🔼](#contents)
+## Main Menu Configuration [🔼](#contents)
 
-<img src="images/slots/slots.webp"/>
+The main menu is the page that shows all operational status. This page can be configured as the following:
 
-The slots section is this middle part of the menu screen. You can define what widget you want in each of these slots. The default widgets: on the left: `connectivity`; on the right: `layer`. Checkout `CONFIG_INFO_LEFT_SLOT` and `CONFIG_INFO_RIGHT_SLOT` variables on [Configuration Options](#configuration-options-). The available widgets are the following:
+<table>
+    <tr>
+        <th>Page</th>
+        <th>Configuration</th>
+    </tr>
+    <tr>
+        <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/slots/2-slots.webp"><img src="images/slots/2-slots_thumb.webp" alt="case" style="width:200px;"/></a></td>
+        <td>To enable animated logo and 2 slots set CONFIG_INFO_SLOT_MODE="2-slot".</td>
+    </tr>
+    <tr>
+        <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/slots/4-slots.webp"><img src="images/slots/4-slots_thumb.webp" alt="case" style="width:200px;"/></a></td>
+        <td>To enable static logo and 4 slots set CONFIG_INFO_SLOT_MODE="4-slot".</td>
+    </tr>
+    <tr>
+        <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/slots/6-slots.webp"><img src="images/slots/6-slots_thumb.webp" alt="case" style="width:200px;"/></a></td>
+        <td>To enable 6 slots set CONFIG_INFO_SLOT_MODE="4-slot".</td>
+    </tr>
+</table>
+
+The default main menu configuration uses 2 slots and animated logo.
+You can set any widget you want at any slot! The following topic lists all possible widgets you can choose.
+
+> [!NOTE]
+> The battery section is fixed and only shows battery status. If you use just one peripheral, you can set this section to show just one battery by setting `CONFIG_SHOW_SINGLE_BATTERY=y`.
+
+## Widgets [🔼](#contents)
+
+You can define what widget you want in each of these slots. Slot numbers goes from 1 to 6. Example bellow:
+
+<img src="images/slots/slot_numbers.webp" alt="case" style="width:300px;"/>
+
+
+The default slot mode is `2-slot`. The default widgets are: on the left: `connectivity` and on the right: `layer`. Checkout `INFO_SLOT_X` variables on [Configuration Options](#configuration-options-). The available widgets are the following:
 
 <table>
     <tr>
@@ -97,7 +130,15 @@ The slots section is this middle part of the menu screen. You can define what wi
         <td>"wpm"</td>
         <td>This widget shows the typing speed.</td>
     </tr>
+    <tr>
+        <td><img src="images/slots/empty.webp" alt="case" style="width:150px;"/></td>
+        <td>"empty"</td>
+        <td>This widget is just blank.</td>
+    </tr>
 </table>
+
+> [!CAUTION]
+> **You can't have more than one slot with the same widget!**. This may cause some unexpected bug. The only exception is the empty widget since this is just a blank slot.
 
 ## Connectivity [🔼](#contents)
 
@@ -228,7 +269,12 @@ Only Theme C is customizable. If `CONFIG_USE_COMPLETE_CUSTOM_THEME=y`, all varia
 
 ## Firmware Installation [🔼](#contents)
 
-Your ZMK keyboard should be set up with a dongle as central. [This](https://zmk.dev/docs/development/hardware-integration/dongle#adding-a-dongle) page has lots of information about adding a dongle. [This](https://github.com/joaopedropio/zmk-swoop) repo may help you in case you run into trouble. 
+Your ZMK keyboard should be set up with a dongle as central. [This](https://zmk.dev/docs/development/hardware-integration/dongle#adding-a-dongle) page has lots of information about adding a dongle. [This](https://github.com/joaopedropio/zmk-swoop) repo may help you in case you run into trouble.
+
+> [!CAUTION]
+> If you are getting `devicetree error: 'mipi-mode' appears in ...` error that means your zmk revision is set to `main`.
+> The main revision uses a new display protocol introduced on zephyr 4.1.
+> To use zmk `main` revision set snake-module revision to `zephyr-4.1`.
 
 Add this module to your `config/west.yml` with these new entries under `remotes` and `projects`:
 
@@ -242,7 +288,7 @@ manifest:
   projects:
     - name: zmk
       remote: zmkfirmware
-      revision: main
+      revision: v0.2
       import: app/west.yml
     - name: snake-module                          # <--- and these
       remote: joaopedropio                        # <---
@@ -295,10 +341,10 @@ For more information on ZMK Modules and building locally, see [the ZMK docs page
 | `CONFIG_MUTE_THRESHOLD` | Any number above `CONFIG_THEME_THRESHOLD` | 600 | Action button hold time to (un)mute. |
 | `CONFIG_DEFAULT_SCREEN` | <ul><li>"snake"</li><li>"status"</li></ul> | "snake" | The screen that is displayed right after the splash screen. |
 | `CONFIG_LOGO_WALK_INTERVAL` | Any number above 0 | 40 | Time in ms between each refresh of the snake logo animation. |
-| `CONFIG_INFO_LEFT_SLOT` | <ul><li>"layer"</li><li>"connectivity"</li><li>"theme"</li><li>"wpm"</li><li>"modifiers"</li></ul> | "connectivity" | Set the widget that will be displayed on the left slot right above left battery level. |
-| `CONFIG_INFO_RIGHT_SLOT` | <ul><li>"layer"</li><li>"connectivity"</li><li>"theme"</li><li>"wpm"</li><li>"modifiers"</li></ul> | "connectivity" | Set the widget that will be displayed on the right slot right above right battery level. |
+| `CONFIG_INFO_SLOT_MODE` | <ul><li>"2-slot"</li><li>"4-slot"</li><li>"6-slot"</li></ul> | "2-slot" | Slot mode. |
+| `CONFIG_INFO_SLOT_[X]` | <ul><li>"layer"</li><li>"connectivity"</li><li>"theme"</li><li>"wpm"</li><li>"modifiers"</li><li>"empty"</li></ul> | - | Set the widget that will be displayed on the `X` slot. `X` can be: `1`, `2`, `3`, `4`, `5` or `6`. Check the configuration [file](#example-configuration-file-) bellow for an example. |
 | `CONFIG_SPLASH_USE_SNAKE_2` | y or n | n | Use the "Snake 2" logo or just the default dongle logo which is just "snake". |
-| `CONFIG_USE_COMPLETE_CUSTOM_THEME` | y or n | n | Enable using basic theme or complete theme on custom theme slot. If `n`, the `CONFIG_THEME_[COLOR TYPE]_COLOR` variables will be used as theme. If `y`, all the variables bellow "complete theme settings" comment on the [file](#example-configuration-file-) bellow will be used as theme. |
+| `CONFIG_USE_COMPLETE_CUSTOM_THEME` | y or n | n | Enable using basic theme or complete theme. If `n`, the `CONFIG_THEME_[COLOR TYPE]_COLOR` variables will be used as theme. If `y`, all the variables bellow "complete theme settings" comment on the [file](#example-configuration-file-) bellow will be used as theme. |
 | `CONFIG_USE_BATTERY_FONT_3X5` | y or n | n | Use 3x5 font on battery section. The default battery font is 5x8. |
 | `CONFIG_SHOW_SINGLE_BATTERY` | y or n | n | Show just the first binded peripheral battery level. Helpful in case of a single peripheral keyboard. |
 
@@ -375,10 +421,15 @@ CONFIG_LOGO_WALK_INTERVAL=40
 # default: 40 (in milliseconds)
 CONFIG_SHOW_SINGLE_BATTERY=n
 # default: n
-CONFIG_INFO_LEFT_SLOT="connectivity"
-# default: "connectivity". Options: "layer", "connectivity", "theme", "wpm", "modifiers"
-CONFIG_INFO_RIGHT_SLOT="layer"
-# default: "layer". Options: "layer", "connectivity", "theme", "wpm", "modifiers"
+CONFIG_INFO_SLOT_MODE="2-slot"
+# default: "2-slot". Options: "2-slot", "4-slot", "6-slot"
+CONFIG_INFO_SLOT_1="empty"
+# default: "connectivity". Options: "layer", "connectivity", "theme", "wpm", "modifiers", "empty"
+CONFIG_INFO_SLOT_2="layer"
+CONFIG_INFO_SLOT_3="wpm"
+CONFIG_INFO_SLOT_4="theme"
+CONFIG_INFO_SLOT_5="connectivity"
+CONFIG_INFO_SLOT_6="modifiers"
 
 
 # configure theme
