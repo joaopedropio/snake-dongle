@@ -23,13 +23,16 @@ Demo: [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?logo=YouTub
 
 ## Contents
 - [Features & Behavior](#features--behavior-)
-- [Slots](#slots-)
+- [Main Menu Configuration](#main-menu-configuration-)
+- [Widgets](#widgets-)
 - [Connectivity](#connectivity-)
 - [Themes](#themes-)
+- [Backlight Control](#backlight-control-)
 - [Firmware Installation](#firmware-installation-)
 - [Configuration Options](#configuration-options-)
 - [Configuration Examples](#configuration-examples-)
 - [Example configuration file](#example-configuration-file-)
+- [Case Options](#case-options-)
 - [Bill of Materials](#bill-of-materials-)
 - [Optional Materials](#optional-materials-)
 - [Wiring Diagram](#wiring-diagram-)
@@ -57,14 +60,50 @@ This dongle also includes three screens in its interface:
 - **Main Menu** — shows operational status:
   - Battery connection state.
   - Battery level.
-  - Two slots that you can choose which widget is most important to you.
+  - 2/4/6 slots that you can choose which widget is most important to you.
   - Animated snake logo.
 
-## Slots [🔼](#contents)
+## Main Menu Configuration [🔼](#contents)
 
-<img src="images/slots/slots.webp"/>
+The main menu is the page that shows all operational status. This page can be configured as the following:
 
-The slots section is this middle part of the menu screen. You can define what widget you want in each of these slots. The default widgets: on the left: `connectivity`; on the right: `layer`. Checkout `CONFIG_INFO_LEFT_SLOT` and `CONFIG_INFO_RIGHT_SLOT` variables on [Configuration Options](#configuration-options-). The available widgets are the following:
+<table>
+    <tr>
+        <th>Page</th>
+        <th>Configuration</th>
+    </tr>
+    <tr>
+        <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/slots/2-slots.webp"><img src="images/slots/2-slots_thumb.webp" alt="case" style="width:200px;"/></a></td>
+        <td>To enable animated logo and 2 slots set CONFIG_INFO_SLOT_MODE="2-slot".</td>
+    </tr>
+    <tr>
+        <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/slots/4-slots.webp"><img src="images/slots/4-slots_thumb.webp" alt="case" style="width:200px;"/></a></td>
+        <td>To enable static logo and 4 slots set CONFIG_INFO_SLOT_MODE="4-slot".</td>
+    </tr>
+    <tr>
+        <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/slots/5-slots.webp"><img src="images/slots/5-slots_thumb.webp" alt="case" style="width:200px;"/></a></td>
+        <td>To enable 5 slots set CONFIG_INFO_SLOT_MODE="5-slot". The top slot is set by the CONFIG_INFO_SLOT_2 variable.</td>
+    </tr>
+    <tr>
+        <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/slots/6-slots.webp"><img src="images/slots/6-slots_thumb.webp" alt="case" style="width:200px;"/></a></td>
+        <td>To enable 6 slots set CONFIG_INFO_SLOT_MODE="6-slot".</td>
+    </tr>
+</table>
+
+The default main menu configuration uses 2 slots and animated logo.
+You can set any widget you want at any slot! The following topic lists all possible widgets you can choose.
+
+> [!NOTE]
+> The battery section is fixed and only shows battery status. You can show up to 3 different peripheral battery levels setting `CONFIG_BATTERY_SLOTS` variable.
+
+## Widgets [🔼](#contents)
+
+You can define what widget you want in each of these slots. Slot numbers goes from 1 to 6. Example bellow:
+
+<img src="images/slots/slot_numbers.webp" alt="case" style="width:300px;"/>
+
+
+The default slot mode is `2-slot`. The default widgets are: on the left: `connectivity` and on the right: `layer`. Checkout `CONFIG_INFO_SLOT_X` variables on [Configuration Options](#configuration-options-). The available widgets are the following:
 
 <table>
     <tr>
@@ -97,7 +136,20 @@ The slots section is this middle part of the menu screen. You can define what wi
         <td>"wpm"</td>
         <td>This widget shows the typing speed.</td>
     </tr>
+    <tr>
+        <td><img src="images/slots/battery.webp" alt="case" style="width:150px;"/></td>
+        <td>"battery"</td>
+        <td>This widget show battery level. Set target peripheral through CONFIG_BATTERY_WIDGET_NUMBER variable.</td>
+    </tr>
+    <tr>
+        <td><img src="images/slots/empty.webp" alt="case" style="width:150px;"/></td>
+        <td>"empty"</td>
+        <td>This widget is just blank.</td>
+    </tr>
 </table>
+
+> [!CAUTION]
+> **You can't have more than one slot with the same widget!**. This may cause some unexpected bug. The only exception is the empty widget since this is just a blank slot.
 
 ## Connectivity [🔼](#contents)
 
@@ -226,6 +278,44 @@ Only Theme C is customizable. If `CONFIG_USE_COMPLETE_CUSTOM_THEME=y`, all varia
     </tr>
 </table>
 
+## Backlight Control [🔼](#contents)
+
+> [!CAUTION]
+> Check [Wiring](#wiring-diagram-) section for instructions on how to solder backlight pin.
+
+To control backlight, some configurations must be set:
+
+### `[YOUR KEYBOARD SHIELD]_dongle.overlay`
+```dts
+/ {  
+	chosen {  
+       zmk,backlight = &lcd_backlight;  
+    };  
+};
+```
+
+### `[YOUR KEYBOARD SHIELD]_dongle.conf`
+```ini
+# Enable Backlight Control
+CONFIG_ZMK_BACKLIGHT=y
+CONFIG_ZMK_BACKLIGHT_BRT_START=100
+CONFIG_ZMK_BACKLIGHT_ON_START=y
+CONFIG_ZMK_BACKLIGHT_AUTO_OFF_IDLE=n
+```
+
+### `Kconfig.defconfig`
+```kconfig
+if ZMK_BACKLIGHT
+
+config PWM
+    default y
+
+config LED_PWM
+    default y
+
+endif # ZMK_BACKLIGHT
+```
+
 ## Firmware Installation [🔼](#contents)
 
 Your ZMK keyboard should be set up with a dongle as central. [This](https://zmk.dev/docs/development/hardware-integration/dongle#adding-a-dongle) page has lots of information about adding a dongle. [This](https://github.com/joaopedropio/zmk-swoop) repo may help you in case you run into trouble.
@@ -300,12 +390,14 @@ For more information on ZMK Modules and building locally, see [the ZMK docs page
 | `CONFIG_MUTE_THRESHOLD` | Any number above `CONFIG_THEME_THRESHOLD` | 600 | Action button hold time to (un)mute. |
 | `CONFIG_DEFAULT_SCREEN` | <ul><li>"snake"</li><li>"status"</li></ul> | "snake" | The screen that is displayed right after the splash screen. |
 | `CONFIG_LOGO_WALK_INTERVAL` | Any number above 0 | 40 | Time in ms between each refresh of the snake logo animation. |
-| `CONFIG_INFO_LEFT_SLOT` | <ul><li>"layer"</li><li>"connectivity"</li><li>"theme"</li><li>"wpm"</li><li>"modifiers"</li></ul> | "connectivity" | Set the widget that will be displayed on the left slot right above left battery level. |
-| `CONFIG_INFO_RIGHT_SLOT` | <ul><li>"layer"</li><li>"connectivity"</li><li>"theme"</li><li>"wpm"</li><li>"modifiers"</li></ul> | "connectivity" | Set the widget that will be displayed on the right slot right above right battery level. |
+| `CONFIG_INFO_SLOT_MODE` | <ul><li>"2-slot"</li><li>"4-slot"</li><li>"6-slot"</li></ul> | "2-slot" | Slot mode. |
+| `CONFIG_INFO_SLOT_[X]` | <ul><li>"layer"</li><li>"connectivity"</li><li>"theme"</li><li>"wpm"</li><li>"modifiers"</li><li>"empty"</li></ul> | - | Set the widget that will be displayed on the `X` slot. `X` can be: `1`, `2`, `3`, `4`, `5` or `6`. Check the configuration [file](#example-configuration-file-) bellow for an example. |
 | `CONFIG_SPLASH_USE_SNAKE_2` | y or n | n | Use the "Snake 2" logo or just the default dongle logo which is just "snake". |
-| `CONFIG_USE_COMPLETE_CUSTOM_THEME` | y or n | n | Enable using basic theme or complete theme on custom theme slot. If `n`, the `CONFIG_THEME_[COLOR TYPE]_COLOR` variables will be used as theme. If `y`, all the variables bellow "complete theme settings" comment on the [file](#example-configuration-file-) bellow will be used as theme. |
+| `CONFIG_USE_COMPLETE_CUSTOM_THEME` | y or n | n | Enable using basic theme or complete theme. If `n`, the `CONFIG_THEME_[COLOR TYPE]_COLOR` variables will be used as theme. If `y`, all the variables bellow "complete theme settings" comment on the [file](#example-configuration-file-) bellow will be used as theme. |
 | `CONFIG_USE_BATTERY_FONT_3X5` | y or n | n | Use 3x5 font on battery section. The default battery font is 5x8. |
-| `CONFIG_SHOW_SINGLE_BATTERY` | y or n | n | Show just the first binded peripheral battery level. Helpful in case of a single peripheral keyboard. |
+| `CONFIG_BATTERY_SLOTS` | 1, 2 or 3 | 2 | Show up to 3 peripheral battery levels. |
+| `CONFIG_ROTATE_DISPLAY` | <ul><li>0</li><li>90</li><li>180</li><li>270</li></ul> | 0 | Rotate Screen Clockwise. This might be helpful if the case design demands rotation. |
+| `CONFIG_BATTERY_WIDGET_NUMBER` | Any number greater or equal to 0 | 0 | Peripheral battery level to be show on the battery widget. |
 
 ## Configuration examples [🔼](#contents)
 
@@ -323,7 +415,7 @@ For more information on ZMK Modules and building locally, see [the ZMK docs page
     <tr>
         <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/example/5x8.webp"><img src="images/example/5x8_thumb.webp" alt="case" style="width:200px;"/></a></td>
         <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/example/single_battery.webp"><img src="images/example/single_battery_thumb.webp" alt="case" style="width:200px;"/></a></td>
-        <td>On battery section, you can show just a single battery slot in case of single peripheral keyboard. The default is 2 battery level slots. If you want to change to a single slot, set CONFIG_SHOW_SINGLE_BATTERY=y.</td>
+        <td>On battery section, you can show 1, 2 or 3 battery levels from up to three different peripheral. The default is 2 battery level slots. Configure setting CONFIG_BATTERY_SLOTS variable.</td>
     </tr>
     <tr>
         <td><a href="https://github.com/joaopedropio/snake-dongle/blob/master/images/example/default_logo.webp"><img src="images/example/default_logo_thumb.webp" alt="case" style="width:200px;"/></a></td>
@@ -335,6 +427,16 @@ For more information on ZMK Modules and building locally, see [the ZMK docs page
 ## Example configuration file [🔼](#contents)
 
 ```ini
+# Enable Backlight Control (only set these if you using backlight control)
+CONFIG_ZMK_BACKLIGHT=y
+# enable backlight
+CONFIG_ZMK_BACKLIGHT_BRT_START=100
+# start brightness: from 0 to 100
+CONFIG_ZMK_BACKLIGHT_ON_START=y
+# enable backlight on startup
+CONFIG_ZMK_BACKLIGHT_AUTO_OFF_IDLE=y
+# automatically turn off backlight on idle
+
 # configure snake game
 CONFIG_SNAKE_FATNESS=1
 # default: 1
@@ -370,6 +472,8 @@ CONFIG_USE_STATUS_SOUND=y
 # default: y
 
 # configure other
+CONFIG_ROTATE_DISPLAY=0
+# default: 0. Options: 0, 90, 180, 270
 CONFIG_THEME_THRESHOLD=300
 # default: 300 (in milliseconds)
 CONFIG_MUTE_THRESHOLD=600
@@ -378,18 +482,25 @@ CONFIG_DEFAULT_SCREEN="snake"
 # default: "snake". Options: "snake", "status"
 CONFIG_LOGO_WALK_INTERVAL=40
 # default: 40 (in milliseconds)
-CONFIG_SHOW_SINGLE_BATTERY=n
-# default: n
-CONFIG_INFO_LEFT_SLOT="connectivity"
-# default: "connectivity". Options: "layer", "connectivity", "theme", "wpm", "modifiers"
-CONFIG_INFO_RIGHT_SLOT="layer"
-# default: "layer". Options: "layer", "connectivity", "theme", "wpm", "modifiers"
+CONFIG_BATTERY_SLOTS=3
+# default: 2. Options: 1, 2, 3.
+CONFIG_BATTERY_WIDGET_NUMBER=0
+# default: 0
+CONFIG_INFO_SLOT_MODE="2-slot"
+# default: "2-slot". Options: "2-slot", "4-slot", "6-slot"
+CONFIG_INFO_SLOT_1="empty"
+# default: "connectivity". Options: "layer", "connectivity", "theme", "wpm", "modifiers", "empty"
+CONFIG_INFO_SLOT_2="layer"
+CONFIG_INFO_SLOT_3="wpm"
+CONFIG_INFO_SLOT_4="theme"
+CONFIG_INFO_SLOT_5="connectivity"
+CONFIG_INFO_SLOT_6="modifiers"
 
 
 # configure theme
 CONFIG_USE_COMPLETE_CUSTOM_THEME=y
-# default: n
-CONFIG_SPLASH_USE_SNAKE_2=y
+# default: y
+CONFIG_SPLASH_USE_SNAKE_2=n
 # default: n
 CONFIG_USE_BATTERY_FONT_3X5=n
 # default: n
@@ -403,6 +514,10 @@ CONFIG_THEME_BG_DARKER_COLOR="393849"
 
 # complete theme settings
 # created by chat gpt
+CONFIG_SPLASH_MULTICOLOR_0="#212121"
+CONFIG_SPLASH_MULTICOLOR_1="#FEE440"
+CONFIG_SPLASH_MULTICOLOR_2="#FF4D6D"
+CONFIG_SPLASH_MULTICOLOR_3="#3C1642"
 CONFIG_SPLASH_LOGO_COLOR="#FF6B81"
 CONFIG_SPLASH_CREATED_BY_COLOR="#7FDBFF"
 CONFIG_SPLASH_BG_COLOR="#212121"
@@ -417,6 +532,10 @@ CONFIG_SNAKE_COLOR_3="#3A86FF"
 CONFIG_SNAKE_COLOR_4="#6A4C93"
 CONFIG_SNAKE_COLOR_5="#B5179E"
 CONFIG_SNAKE_COLOR_6="#80ED99"
+CONFIG_BATTERY_WIDGET_NUM_COLOR="#FF8C00"
+CONFIG_BATTERY_WIDGET_PERCENTAGE_COLOR="#66FF66"
+CONFIG_BATTERY_WIDGET_TEXT_COLOR="#A0A0A0"
+CONFIG_BATTERY_WIDGET_BG_COLOR="#212121"
 CONFIG_BATTERY_NUM_COLOR="#FF8C00"
 CONFIG_BATTERY_PERCENTAGE_COLOR="#66FF66"
 CONFIG_BATTERY_BG_COLOR="#212121"
@@ -450,6 +569,33 @@ CONFIG_MODIFIER_SELECTED_COLOR="#9D4EDD"
 CONFIG_MODIFIER_UNSELECTED_COLOR="#4A4E69"
 CONFIG_MODIFIER_BG_COLOR="#212121"
 ```
+
+## Case Options [🔼](#contents)
+
+Since I don't a 3D printer I have no knownledge on design the case but the community has done great work to package this little dongle:
+
+<table>
+    <tr>
+        <th>Case</th>
+        <th>Link</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><img src="images/case/case_original.webp" alt="case" style="width:400px;"/></td>
+        <td><a href="https://github.com/joaopedropio/snake-dongle-shell/tree/master">github</a></td>
+        <td>My wife designed the original case for snake dongle.</td>
+    </tr>
+    <tr>
+        <td><img src="images/case/case_Hailee2610.webp" alt="case" style="width:400px;"/></td>
+        <td><a href="https://github.com/hailee0710/flake-zmk-module/blob/flake-lcd-dongle/stls/lcd-dongle-gameboy%20v4.stl">stls</a></td>
+        <td><a href="https://www.reddit.com/user/Hailee2610/">Hailee2610</a> designed <a href="https://www.reddit.com/r/ErgoMechKeyboards/comments/1ogabo8/gameboy_snake_dongle/">this</a> awesome gameboy inspired case.</td>
+    </tr>
+    <tr>
+        <td><img src="images/case/case_felixJR123.webp" alt="case" style="width:400px;"/></td>
+        <td><a href="https://github.com/felixJR123/Snake-Dongle-Case">github</a></td>
+        <td><a href="https://github.com/felixJR123/">felixJR123</a> designed this elegant prospector-like case. It even can be used with 2 different types of screen and you can choose to build with 6x6 push buttons or mouse switches!</td>
+    </tr>
+</table>
 
 ## Bill of Materials [🔼](#contents)
 
@@ -554,7 +700,18 @@ CONFIG_MODIFIER_BG_COLOR="#212121"
 
 ## Wiring Diagram [🔼](#contents)
 
+> [!NOTE]
+> The sound effects module is totally optional but it's a cool add on.
+
+> [!CAUTION]
+> To use control backlight you must solder the backlight pin (BL) to pin 104 as shown on the second wiring diagram. 
+If you prefer to just have the backlight always on (just like me) you can just solder the BL pin to VCC as shown on the first wiring diagram.
+
+<h1 style="text-align:center;">WITHOUT Backlight Control</h1>
 <img src="images/wiring.webp" width="100%" ></embed>
+
+<h1 style="text-align:center;">WITH Backlight Control</h1>
+<img src="images/wiring_backlight.webp" width="100%" ></embed>
 
 ## Build log [🔼](#contents)
 
@@ -671,3 +828,4 @@ CONFIG_MODIFIER_BG_COLOR="#212121"
 - [This](https://github.com/tokyo2006/zmk-config-oddball) repo from [tokyo2006](https://github.com/tokyo2006): dongle display widget code.
 - [Prospector](https://github.com/carrefinho/prospector) from [Carrefinho](https://github.com/carrefinho): module code and ST7789 driver.
 - [Cygnus](https://github.com/juhakaup/keyboards/tree/main/Cygnus%20v1.0) repo from [juhakaup](https://github.com/juhakaup): README inspiration.
+- [Hailee2610](https://www.reddit.com/user/Hailee2610/) and [felixJR123](https://github.com/felixJR123/): great work on creating new case options for this dongle 🐍
